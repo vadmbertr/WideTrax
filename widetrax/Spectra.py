@@ -16,7 +16,7 @@ def retrieve_segments(datasets,FileType,namevar="ssha"):
     datasets : Dict
         Dictionary containing xarray.Datasets
     FileType : str
-        The file type used to calculate datasets, "NetCDF" or "Zarr"
+        The file type used to calculate datasets, "NetCDF" or "Zarr" or "NetCDF_SWOT"
     namevar : str, optional
         The variable name used to calculate PSD.
         Default is 'ssha'.
@@ -32,19 +32,25 @@ def retrieve_segments(datasets,FileType,namevar="ssha"):
     counter = 0
     
     #Calculation of Sea Surface Height (SSH) : SSH = SSHA + MDT
-    for ky in range(len(datasets)):
-        datasets[ky]['ssh'] = datasets[ky][namevar] + datasets[ky]['mdt']
-    
+    if FileType == "NetCDF_SWOT":
+        for ky in range(len(datasets)):
+            datasets[ky]['ssh'] = datasets[ky][namevar] + datasets[ky]['mdt']
+    else : 
+        for ky in range(len(datasets)):
+            datasets[ky]['ssh'] = datasets[ky][namevar] 
+            
     for key, dataset in datasets.items():
         for col in range(dataset.dims['num_pixels']):
             # Extract data for one column
             col_data = dataset.isel(num_pixels=col)
             
             # Drop unnecessary variables based on FileType
-            drop_vars = ['latitude', 'longitude', namevar, 'mdt']
+            drop_vars = ['latitude', 'longitude']
+            if FileType == "NetCDF_SWOT":
+                drop_vars.extend([namevar, 'mdt'])
             if FileType == "Zarr":
                 drop_vars.extend(['cycle_number', 'duacs_land_sea_mask', 'pass_number'])
-            elif FileType != "NetCDF":
+            elif FileType != "NetCDF" and FileType != "NetCDF_SWOT":
                 raise ValueError(f"Unsupported FileType: {FileType}")
             
             col_dataset = col_data.drop_vars(drop_vars, errors="ignore")
@@ -69,7 +75,6 @@ def retrieve_segments(datasets,FileType,namevar="ssha"):
                     counter += 1
                 
     return segments_dict
-
 
 # =============================================================================
 # calculate_segment_psd
