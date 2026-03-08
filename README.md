@@ -2,10 +2,10 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/widetrax)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/widetrax)
 
-# 🌊 WideTrax: Your Tool for Wide-Swath Altimetry Ocean Data
+# 🌊 WideTrax:  cloud-ready processing of Wide-Swath Altimetry Ocean Data
 ## Description
 
-**WideTrax** is a powerful package designed to process and analyze wide-swath altimetry ocean data effortlessly. 
+**WideTrax** is a package designed to streamline the processing and analysis of wide-swath altimetry ocean data. 
 
 ### ✨ Key Features  
 1️⃣ **Compute PSD (Power Spectral Density):**  
